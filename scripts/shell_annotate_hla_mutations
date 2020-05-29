@@ -1,0 +1,38 @@
+
+
+#### check if an appropriate number of arguments were passed ####
+
+if [ $# -ne 3 ]; then
+        echo 1>&2 Usage: $0 indiv tarZipDir outDir
+        echo "  -indiv: individual ID, used as prefix for output files"
+        echo "  -tarZipDir: tar zipped directory containing the raw call files (Mutect: call_stats*, Strelka: *all.somatic.indels.vcf)"
+	echo "  -outDir: the output directory"   
+     exit 127
+fi
+
+
+indiv=$1
+tarZipDir=$2
+outDir=$3
+
+export PERL5LIB=$PERL5LIB:/home/polysolver/scripts
+
+tar xvfz $tarZipDir 
+
+dirPrefix=`/home/polysolver/scripts/get_prefix.pl $tarZipDir`
+
+echo "dirPrefix=$dirPrefix"
+
+/home/polysolver/scripts/annotate_hla_mutect.pl $indiv $dirPrefix /home/polysolver/data/a_complete.3100.new.eb.fasta /home/polysolver/data/b_complete.3100.new.eb.fasta /home/polysolver/data/c_complete.3100.new.eb.fasta /home/polysolver $outDir
+
+/home/polysolver/scripts/filter_hla_mutect.pl $outDir/$indiv.mutect.unfiltered.annotated $indiv $outDir 0 /home/polysolver
+ 
+/home/polysolver/scripts/remove_synonymous_hla_mutect.pl $outDir/$indiv.mutect.filtered.annotated $indiv $outDir
+
+
+/home/polysolver/scripts/annotate_hla_strelka_indels.pl $indiv $dirPrefix /home/polysolver/data/a_complete.3100.new.eb.fasta /home/polysolver/data/b_complete.3100.new.eb.fasta /home/polysolver/data/c_complete.3100.new.eb.fasta /home/polysolver $outDir
+
+/home/polysolver/scripts/filter_hla_strelka_indels.pl $outDir/$indiv.strelka_indels.unfiltered.annotated $indiv $outDir /home/polysolver
+
+#rm -f $dir/*mutect.filtered.annotated
+
