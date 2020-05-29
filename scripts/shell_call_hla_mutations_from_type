@@ -39,7 +39,9 @@ tag_file=/home/polysolver/data/abc_38_both_pm_update.uniq
 
 /home/polysolver/binaries/samtools view $normal_bam_hla | head -10000 | cut -f2 > temp.normal.checkpairs
 
-/home/polysolver/scripts/check_bam_flag_pairs.pl temp.normal. checkpairs 0 1
+# SS this expects an additional arg, outdir
+# also remove space
+/home/polysolver/scripts/check_bam_flag_pairs.pl temp.normal.checkpairs 0 1 $outDir
 
 status=`tail -1 check.status.out.txt | cut -f2`
 
@@ -58,7 +60,8 @@ rm -f check.status.out.txt
 
 /home/polysolver/binaries/samtools view $tumor_bam_hla | head -10000 | cut -f2 > temp.tumor.checkpairs
 
-/home/polysolver/scripts/check_bam_flag_pairs.pl temp.tumor.checkpairs 0 1
+# SS this expects an additional arg, outdir
+/home/polysolver/scripts/check_bam_flag_pairs.pl temp.tumor.checkpairs 0 1 $outDir
 
 status=`tail -1 check.status.out.txt | cut -f2`
 
