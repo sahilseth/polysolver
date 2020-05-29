@@ -1,3 +1,4 @@
+# this includes minor variations from the code base of polysolver v4 (from the docker image)
 
 #### TABLE OF CONTENTS ####
 1. Description
